@@ -1,9 +1,8 @@
-# Ember.js TodoMVC Example using Ember CLI
+To create this app you have to clone this repository.
 
-> A framework for creating ambitious web applications.
+Next in comand line type:
+$ npm install
+$ bower install
+$ ember s
 
-> _[Ember.js - emberjs.com](http://emberjs.com)_
-> _[Ember CLI - ember-cli.com](http://ember-cli.com)_
-
-## Credits
-https://github.com/tastejs/todomvc
+Enjoy!
