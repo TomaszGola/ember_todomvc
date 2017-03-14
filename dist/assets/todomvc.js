@@ -132,11 +132,21 @@ define('todomvc/controllers/completed', ['exports', 'ember'], function (exports,
 		todos: _ember['default'].computed.filterBy('model', 'completed', true)
 	});
 });
-define('todomvc/helpers/app-version', ['exports', 'ember', 'todomvc/config/environment'], function (exports, _ember, _todomvcConfigEnvironment) {
+define('todomvc/helpers/app-version', ['exports', 'ember', 'todomvc/config/environment', 'ember-cli-app-version/utils/regexp'], function (exports, _ember, _todomvcConfigEnvironment, _emberCliAppVersionUtilsRegexp) {
   exports.appVersion = appVersion;
   var version = _todomvcConfigEnvironment['default'].APP.version;
 
-  function appVersion() {
+  function appVersion(_) {
+    var hash = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+    if (hash.hideSha) {
+      return version.match(_emberCliAppVersionUtilsRegexp.versionRegExp)[0];
+    }
+
+    if (hash.hideVersion) {
+      return version.match(_emberCliAppVersionUtilsRegexp.shaRegExp)[0];
+    }
+
     return version;
   }
 
@@ -356,7 +366,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("todomvc/app")["default"].create({"name":"todomvc","version":"0.0.0+"});
+  require("todomvc/app")["default"].create({"name":"todomvc","version":"0.0.0+2251d722"});
 }
 
 /* jshint ignore:end */
