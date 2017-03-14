@@ -2,6 +2,10 @@
   cursor: pointer;
 }
 
+#todo-list li label {
+  white-space: normal;
+}
+
 #todo-list li .date {
   position: absolute;
   top: 15px;

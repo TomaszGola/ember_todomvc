@@ -10,9 +10,17 @@
   </label>
   <div class="date">
   {{#unless showCalendar}}
-    <button onclick={{action 'showCalendar'}}>calendar</button>
+    <button onclick={{action 'showCalendar'}}>
+      <img src="/iconmonstr-calendar.svg" alt="calendar">
+    </button>
   {{else}}
-    <input type="date">
+    {{
+      ember-flatpickr
+      locale='ru'
+      onChange=(action (mut dateValue))
+      placeholder='Choose a Date'
+      static=true
+    }}
   {{/unless}}
   </div>
   <button
