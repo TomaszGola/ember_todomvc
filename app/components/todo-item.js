@@ -6,8 +6,9 @@ export default Ember.Component.extend({
 	editing: false,
 	classNameBindings: ['todo.completed', 'editing'],
 	showCalendar: false,
+  dateMade: false,
 
-	actions: {
+  actions: {
 		startEditing() {
 			this.get('onStartEdit')();
 			this.set('editing', true);
@@ -45,6 +46,10 @@ export default Ember.Component.extend({
 
 		showCalendar(){
 			this.set('showCalendar', true);
+		},
+
+		redColor(){
+      this.set('dateMade', true);
 		}
 	},
 

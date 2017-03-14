@@ -5,7 +5,8 @@
     checked={{todo.completed}}
     onchange={{action 'toggleCompleted'}}>
   <label
-    ondblclick={{action 'startEditing'}}>
+    ondblclick={{action 'startEditing'}}
+    class="{{if dateMade 'red'}}">
     {{todo.title}}
   </label>
   <div class="date">
@@ -20,6 +21,7 @@
       onChange=(action (mut dateValue))
       placeholder='Choose a Date'
       static=true
+      onClose='redColor'
     }}
   {{/unless}}
   </div>

@@ -11,3 +11,7 @@
   top: 15px;
   right: 50px;
 }
+
+#todo-list li .red {
+  color: red;
+}
