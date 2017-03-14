@@ -5,6 +5,7 @@ export default Ember.Component.extend({
 	tagName: 'li',
 	editing: false,
 	classNameBindings: ['todo.completed', 'editing'],
+	showCalendar: false,
 
 	actions: {
 		startEditing() {
@@ -40,6 +41,10 @@ export default Ember.Component.extend({
 
 		removeTodo() {
 			this.get('repo').delete(this.get('todo'));
+		},
+
+		showCalendar(){
+			this.set('showCalendar', true);
 		}
 	},
 
