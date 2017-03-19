@@ -36,8 +36,6 @@ define('todomvc/components/todo-item', ['exports', 'ember'], function (exports, 
 		tagName: 'li',
 		editing: false,
 		classNameBindings: ['todo.completed', 'editing'],
-		showCalendar: false,
-		dateMade: false,
 
 		actions: {
 			startEditing: function startEditing() {
@@ -70,19 +68,23 @@ define('todomvc/components/todo-item', ['exports', 'ember'], function (exports, 
 			toggleCompleted: function toggleCompleted(e) {
 				var todo = this.get('todo');
 				_ember['default'].set(todo, 'completed', e.target.checked);
+				this.set('todo.enableCalendar', !e.target.checked);
 				this.get('repo').persist();
 			},
 
 			removeTodo: function removeTodo() {
 				this.get('repo')['delete'](this.get('todo'));
+				this.get('repo').persist();
 			},
 
 			showCalendar: function showCalendar() {
-				this.set('showCalendar', true);
+				this.set('todo.showCalendar', true);
 			},
 
-			redColor: function redColor() {
-				this.set('dateMade', true);
+			redColor: function redColor(dateObj) {
+				this.set('todo.dateMade', true);
+				this.set('todo.date', dateObj);
+				this.get('repo').persist();
 			}
 		},
 
@@ -133,7 +135,14 @@ define('todomvc/controllers/application', ['exports', 'ember'], function (export
 		actions: {
 			createTodo: function createTodo(e) {
 				if (e.keyCode === 13 && !_ember['default'].isBlank(e.target.value)) {
-					this.get('repo').add({ title: e.target.value.trim(), completed: false });
+					this.get('repo').add({
+						title: e.target.value.trim(),
+						completed: false,
+						date: null,
+						dateMade: false,
+						showCalendar: false,
+						enableCalendar: true
+					});
 					e.target.value = '';
 				}
 			},
@@ -340,7 +349,7 @@ define("todomvc/templates/completed", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template({ "id": "7qyGvTPX", "block": "{\"statements\":[[\"append\",[\"helper\",[\"todo-list\"],null,[[\"todos\"],[[\"get\",[\"todos\"]]]]],false]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[],\"hasPartials\":false}", "meta": { "moduleName": "todomvc/templates/completed.hbs" } });
 });
 define("todomvc/templates/components/todo-item", ["exports"], function (exports) {
-  exports["default"] = Ember.HTMLBars.template({ "id": "EUCPzezB", "block": "{\"statements\":[[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"view\"],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"input\",[]],[\"static-attr\",\"type\",\"checkbox\"],[\"static-attr\",\"class\",\"toggle\"],[\"dynamic-attr\",\"checked\",[\"unknown\",[\"todo\",\"completed\"]],null],[\"dynamic-attr\",\"onchange\",[\"helper\",[\"action\"],[[\"get\",[null]],\"toggleCompleted\"],null],null],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"dynamic-attr\",\"ondblclick\",[\"helper\",[\"action\"],[[\"get\",[null]],\"startEditing\"],null],null],[\"dynamic-attr\",\"class\",[\"concat\",[[\"helper\",[\"if\"],[[\"get\",[\"dateMade\"]],\"red\"],null]]]],[\"flush-element\"],[\"text\",\"\\n    \"],[\"append\",[\"unknown\",[\"todo\",\"title\"]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"date\"],[\"flush-element\"],[\"text\",\"\\n\"],[\"block\",[\"unless\"],[[\"get\",[\"showCalendar\"]]],null,1,0],[\"text\",\"  \"],[\"close-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"button\",[]],[\"dynamic-attr\",\"onclick\",[\"helper\",[\"action\"],[[\"get\",[null]],\"removeTodo\"],null],null],[\"static-attr\",\"class\",\"destroy\"],[\"flush-element\"],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"input\",[]],[\"static-attr\",\"type\",\"text\"],[\"static-attr\",\"class\",\"edit\"],[\"dynamic-attr\",\"value\",[\"unknown\",[\"todo\",\"title\"]],null],[\"dynamic-attr\",\"onblur\",[\"helper\",[\"action\"],[[\"get\",[null]],\"doneEditing\"],[[\"value\"],[\"target.value\"]]],null],[\"dynamic-attr\",\"onkeydown\",[\"helper\",[\"action\"],[[\"get\",[null]],\"handleKeydown\"],null],null],[\"static-attr\",\"autofocus\",\"\"],[\"flush-element\"],[\"close-element\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[[\"text\",\"    \"],[\"append\",[\"helper\",[\"ember-flatpickr\"],null,[[\"locale\",\"onChange\",\"placeholder\",\"static\",\"onClose\"],[\"ru\",[\"helper\",[\"action\"],[[\"get\",[null]],[\"helper\",[\"mut\"],[[\"get\",[\"dateValue\"]]],null]],null],\"Choose a Date\",true,\"redColor\"]]],false],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"    \"],[\"open-element\",\"button\",[]],[\"dynamic-attr\",\"onclick\",[\"helper\",[\"action\"],[[\"get\",[null]],\"showCalendar\"],null],null],[\"flush-element\"],[\"text\",\"\\n      \"],[\"open-element\",\"img\",[]],[\"static-attr\",\"src\",\"/iconmonstr-calendar.svg\"],[\"static-attr\",\"alt\",\"calendar\"],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n    \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "todomvc/templates/components/todo-item.hbs" } });
+  exports["default"] = Ember.HTMLBars.template({ "id": "UNpekU+5", "block": "{\"statements\":[[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"view\"],[\"flush-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"input\",[]],[\"static-attr\",\"type\",\"checkbox\"],[\"static-attr\",\"class\",\"toggle\"],[\"dynamic-attr\",\"checked\",[\"unknown\",[\"todo\",\"completed\"]],null],[\"dynamic-attr\",\"onchange\",[\"helper\",[\"action\"],[[\"get\",[null]],\"toggleCompleted\"],null],null],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"label\",[]],[\"dynamic-attr\",\"ondblclick\",[\"helper\",[\"action\"],[[\"get\",[null]],\"startEditing\"],null],null],[\"dynamic-attr\",\"class\",[\"concat\",[[\"helper\",[\"if\"],[[\"get\",[\"todo\",\"dateMade\"]],\"red\"],null]]]],[\"flush-element\"],[\"text\",\"\\n    \"],[\"append\",[\"unknown\",[\"todo\",\"title\"]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"date\"],[\"flush-element\"],[\"text\",\"\\n\"],[\"block\",[\"if\"],[[\"get\",[\"todo\",\"enableCalendar\"]]],null,3,0],[\"text\",\"  \"],[\"close-element\"],[\"text\",\"\\n  \"],[\"open-element\",\"button\",[]],[\"dynamic-attr\",\"onclick\",[\"helper\",[\"action\"],[[\"get\",[null]],\"removeTodo\"],null],null],[\"static-attr\",\"class\",\"destroy\"],[\"flush-element\"],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\"],[\"open-element\",\"input\",[]],[\"static-attr\",\"type\",\"text\"],[\"static-attr\",\"class\",\"edit\"],[\"dynamic-attr\",\"value\",[\"unknown\",[\"todo\",\"title\"]],null],[\"dynamic-attr\",\"onblur\",[\"helper\",[\"action\"],[[\"get\",[null]],\"doneEditing\"],[[\"value\"],[\"target.value\"]]],null],[\"dynamic-attr\",\"onkeydown\",[\"helper\",[\"action\"],[[\"get\",[null]],\"handleKeydown\"],null],null],[\"static-attr\",\"autofocus\",\"\"],[\"flush-element\"],[\"close-element\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[],\"locals\":[]},{\"statements\":[[\"text\",\"        \"],[\"append\",[\"helper\",[\"ember-flatpickr\"],null,[[\"onChange\",\"placeholder\",\"static\",\"onClose\",\"value\"],[[\"helper\",[\"action\"],[[\"get\",[null]],[\"helper\",[\"mut\"],[[\"get\",[\"dateValue\"]]],null]],null],\"Choose a Date\",true,\"redColor\",[\"helper\",[\"readonly\"],[[\"get\",[\"todo\",\"date\"]]],null]]]],false],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"        \"],[\"open-element\",\"button\",[]],[\"dynamic-attr\",\"onclick\",[\"helper\",[\"action\"],[[\"get\",[null]],\"showCalendar\"],null],null],[\"flush-element\"],[\"text\",\"\\n          \"],[\"open-element\",\"img\",[]],[\"static-attr\",\"src\",\"/iconmonstr-calendar.svg\"],[\"static-attr\",\"alt\",\"calendar\"],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n        \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"\\n\"],[\"block\",[\"unless\"],[[\"get\",[\"todo\",\"showCalendar\"]]],null,2,1]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "todomvc/templates/components/todo-item.hbs" } });
 });
 define("todomvc/templates/components/todo-list", ["exports"], function (exports) {
   exports["default"] = Ember.HTMLBars.template({ "id": "+yC2joV7", "block": "{\"statements\":[[\"block\",[\"if\"],[[\"get\",[\"todos\",\"length\"]]],null,2]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[[\"text\",\"      \"],[\"append\",[\"helper\",[\"todo-item\"],null,[[\"todo\",\"onStartEdit\",\"onEndEdit\"],[[\"get\",[\"todo\"]],[\"helper\",[\"action\"],[[\"get\",[null]],\"disableToggle\"],null],[\"helper\",[\"action\"],[[\"get\",[null]],\"enableToggle\"],null]]]],false],[\"text\",\"\\n\"]],\"locals\":[\"todo\"]},{\"statements\":[[\"text\",\"    \"],[\"open-element\",\"input\",[]],[\"static-attr\",\"type\",\"checkbox\"],[\"static-attr\",\"id\",\"toggle-all\"],[\"dynamic-attr\",\"checked\",[\"unknown\",[\"allCompleted\"]],null],[\"dynamic-attr\",\"onchange\",[\"helper\",[\"action\"],[[\"get\",[null]],\"toggleAll\"],null],null],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"block\",[\"if\"],[[\"get\",[\"canToggle\"]]],null,1],[\"text\",\"  \"],[\"open-element\",\"ul\",[]],[\"static-attr\",\"id\",\"todo-list\"],[\"static-attr\",\"class\",\"todo-list\"],[\"flush-element\"],[\"text\",\"\\n\"],[\"block\",[\"each\"],[[\"get\",[\"todos\"]]],null,0],[\"text\",\"  \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "todomvc/templates/components/todo-list.hbs" } });
@@ -384,7 +393,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("todomvc/app")["default"].create({"name":"todomvc","version":"0.0.0+05f0bcaa"});
+  require("todomvc/app")["default"].create({"name":"todomvc","version":"0.0.0+72d6d862"});
 }
 
 /* jshint ignore:end */

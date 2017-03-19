@@ -6,24 +6,28 @@
     onchange={{action 'toggleCompleted'}}>
   <label
     ondblclick={{action 'startEditing'}}
-    class="{{if dateMade 'red'}}">
+    class="{{if todo.dateMade 'red'}}">
     {{todo.title}}
   </label>
   <div class="date">
-  {{#unless showCalendar}}
-    <button onclick={{action 'showCalendar'}}>
-      <img src="/iconmonstr-calendar.svg" alt="calendar">
-    </button>
-  {{else}}
-    {{
-      ember-flatpickr
-      locale='ru'
-      onChange=(action (mut dateValue))
-      placeholder='Choose a Date'
-      static=true
-      onClose='redColor'
-    }}
-  {{/unless}}
+    {{#if todo.enableCalendar}}
+
+      {{#unless todo.showCalendar}}
+        <button onclick={{action 'showCalendar'}}>
+          <img src="/iconmonstr-calendar.svg" alt="calendar">
+        </button>
+      {{else}}
+        {{
+          ember-flatpickr
+          onChange=(action (mut dateValue))
+          placeholder='Choose a Date'
+          static=true
+          onClose='redColor'
+          value=(readonly todo.date)
+        }}
+      {{/unless}}
+    {{else}}
+    {{/if}}
   </div>
   <button
     onclick={{action 'removeTodo'}}

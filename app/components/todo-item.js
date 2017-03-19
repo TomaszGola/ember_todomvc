@@ -5,8 +5,6 @@ export default Ember.Component.extend({
 	tagName: 'li',
 	editing: false,
 	classNameBindings: ['todo.completed', 'editing'],
-	showCalendar: false,
-  dateMade: false,
 
   actions: {
 		startEditing() {
@@ -37,19 +35,23 @@ export default Ember.Component.extend({
 		toggleCompleted(e) {
 			let todo = this.get('todo');
 			Ember.set(todo, 'completed', e.target.checked);
-			this.get('repo').persist();
+      this.set('todo.enableCalendar', !e.target.checked);
+      this.get('repo').persist();
 		},
 
 		removeTodo() {
 			this.get('repo').delete(this.get('todo'));
-		},
+      this.get('repo').persist();
+    },
 
 		showCalendar(){
-			this.set('showCalendar', true);
+			this.set('todo.showCalendar', true);
 		},
 
-		redColor(){
-      this.set('dateMade', true);
+		redColor(dateObj){
+      this.set('todo.dateMade', true);
+      this.set('todo.date', dateObj);
+      this.get('repo').persist();
 		}
 	},
 
